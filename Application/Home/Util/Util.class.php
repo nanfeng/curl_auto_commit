@@ -157,15 +157,18 @@ class Util
 	public function parseFile()
 	{
 		$content = file_get_contents($this->data_file);
-		$match = preg_split('/[-]{5,}/', $content);
+		$match = preg_split('/[-]{5,}\d{0,3}/', $content);// -----10 处理这种分割
 		$res = array();
 		for($i=0; $i<count($match); $i++){
 			$line = trim($match[$i]);
 			$pos = strpos($line, "\n");
 			$title = trim(substr($line, 0, $pos-1));
 			$title = $this->charsetConvert($title);
+			if (empty($title))
+				continue;
 			$cont = trim(substr($line, $pos));
 			$cont = $this->charsetConvert($cont);
+			$cont = str_replace(array("\r\n", "\r", "\n"), "<br/>", $cont); 
 			$res[] = array(
 					'oImgB' => '',
 					'pid' => '5_636_638',
@@ -205,10 +208,15 @@ class Util
 		$arr = $this->parseFile();
 		$content = '';
 		$res = array();
+		$timearr = array(10,15,8,13,16);
+		$t = 0;
 
 		foreach ($arr as $item) {
 			$content = http_build_query($item);
-
+			
+			sleep($timearr[$t%count($timearr)]);
+			$t++;
+			
 			$ch = curl_init($this->commit_url);
 			curl_setopt($ch, CURLOPT_HEADER, false);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

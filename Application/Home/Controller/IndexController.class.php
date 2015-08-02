@@ -73,9 +73,13 @@ class IndexController extends Controller {
     */
     public function commitFile()
     {
+        $starttime = date('Y-m-d H:i:s');
         $util = new \Util();
         $res = $util->commitData();
         // var_dump($res);
+        $endtime = date('Y-m-d H:i:s');
+        $this->assign('starttime', $starttime);
+        $this->assign('endtime', $endtime);
         $this->assign('list', $res);
         $this->assign('count', count($res));
         $this->display();
