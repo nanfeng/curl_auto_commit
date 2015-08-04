@@ -55,7 +55,7 @@ class Util
 	{
 		$dir = dirname($this->code_file);
 		is_dir($dir) || mkdir($dir);
-		file_exists($this->code_file) && unlink($this->code_file);
+		file_exists($this->code_file) && file_put_contents($this->code_file, "");
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Util
 	{
 		$dir = dirname($this->data_file);
 		is_dir($dir) || mkdir($dir);
-		file_exists($this->data_file) && unlink($this->data_file);
+		file_exists($this->data_file) && file_put_contents($this->data_file, "");
 	}
 
 	public function generateCookie()
