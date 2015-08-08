@@ -57,7 +57,8 @@ class IndexController extends Controller {
 	    $upload->savePath  =     ''; // 设置附件上传（子）目录
         $upload->saveName = 'data';
 	    $upload->saveExt = 'txt';
-	    $upload->autoSub  = false;
+        $upload->autoSub  = false;
+	    $upload->replace  = true;
 	    // 上传文件 
 	    $info   =   $upload->upload();
 	    if(!$info) {// 上传错误提示错误信息

@@ -16,12 +16,14 @@ class Util
 	private $code_file = "";
 	private $cookie_file = "";
 	private $data_file = "";
+	private $status_file = "";
 
 	public function __construct()
 	{
-		$this->code_file = realpath(dirname(__FILE__)."/../../../Public/img/code.png");
-		$this->cookie_file = realpath(dirname(__FILE__)."/../../../Public/cookie/cookie");
-		$this->data_file = realpath(dirname(__FILE__)."/../../../Public/data/data.txt");
+		$this->code_file = realpath(dirname(__FILE__)."/../../../")."/Public/img/code.png";
+		$this->cookie_file = realpath(dirname(__FILE__)."/../../../")."/Public/cookie/cookie";
+		$this->data_file = realpath(dirname(__FILE__)."/../../../")."/Public/data/data.txt";
+		$this->status_file = realpath(dirname(__FILE__)."/../../../")."/status.txt";
 	}
 
 	public function getVars()
@@ -82,6 +84,7 @@ class Util
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie_file);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);   // 设置socket连接超时时间
 
 		$out = curl_exec($ch);
 		curl_close($ch);
@@ -127,8 +130,32 @@ class Util
 		curl_setopt($ch, CURLOPT_REFERER, 'http://www.dginfo.com/login.asp');
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36');
 		curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookie_file);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie_file);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);   // 设置socket连接超时时间
 
 		$ret = curl_exec($ch);
+		curl_close($ch);
+
+		$this->selectProduct();
+		return $ret;
+	}
+
+	/**
+	*进入选择产品页面，保存产品等cookie
+	*
+	*/
+	public function selectProduct()
+	{
+		$ret = null;
+		$url = 'http://www.dginfo.com/Seller/Products_Detailed.asp?pid=2&pid2=122&pid3=127';
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookie_file);
+		curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie_file);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);   // 设置socket连接超时时间
+
+		$out = curl_exec($ch);
 		curl_close($ch);
 		return $ret;
 	}
@@ -176,7 +203,7 @@ class Util
 					'SEOTitle' => $title,
 					'SEOKeywords' => $title,
 					'SEODescription' => $title,
-					'SellerPid' => '1672702',
+					'SellerPid' => '1673654',
 					'Img_s0' => 'http://www.dginfo.com/images/noimg/128_128.jpg',
 					'Img_s1' => 'http://www.dginfo.com/images/noimg/128_128.jpg',
 					'Img_s2' => 'http://www.dginfo.com/images/noimg/128_128.jpg',
@@ -225,13 +252,24 @@ class Util
 			curl_setopt($ch, CURLOPT_COOKIEFILE, $this->cookie_file); //读取  
 			curl_setopt($ch, CURLOPT_REFERER, 'http://www.dginfo.com/Seller/Products_Detailed.asp?pid=1&pid2=6&pid3=12');
 			curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36');
-
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);   // 设置socket连接超时时间
+			//键	值Cookie	CNZZDATA2414294=cnzz_eid%3D948302615-1438687557-http%253A%252F%252Fwww.dginfo.com%252F%26ntime%3D1438996306; ASPSESSIONIDSQBQBRCS=CGOIMDKCPCALFIAJEEALFJHJ; usedcate=a2=%3Cli%3E%3Ca+href%3D%22url%3Fpid%3D2%26amp%3Bpid2%3D102%26amp%3Bpid3%3D109%26amp%3Bhasrecord%3D1%22%3E%E7%8E%A9%E5%85%B7%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E6%9C%A8%E5%88%B6%E7%8E%A9%E5%85%B7%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E7%8E%A9%E5%85%B7%E9%B1%BC%3C%2Fa%3E%3C%2Fli%3E&a1=%3Cli%3E%3Ca+href%3D%22url%3Fpid%3D4%26amp%3Bpid2%3D465%26amp%3Bpid3%3D467%26amp%3Bhasrecord%3D1%22%3E%E6%9C%BA%E6%A2%B0%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E6%9C%BA%E5%BA%8A%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E9%94%AF%E5%BA%8A%3C%2Fa%3E%3C%2Fli%3E&a0=%3Cli%3E%3Ca+href%3D%22url%3Fpid%3D4%26amp%3Bpid2%3D425%26amp%3Bpid3%3D427%26amp%3Bhasrecord%3D1%22%3E%E6%9C%BA%E6%A2%B0%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E5%BC%B9%E7%B0%A7%E3%80%80%26gt%3B%26gt%3B%E3%80%80%E6%81%92%E5%8A%9B%E5%BC%B9%E7%B0%A7%3C%2Fa%3E%3C%2Fli%3E; Hm_lvt_1dd872a37d41d9ebae4fd05f84c337c5=1438577786,1438692938,1438994215,1438997129; dginfo=TYPE=4&WebId=0&Name=%E5%BC%A0%E6%95%AC%E4%B8%9C&PWD=816d0d524f0de18778772d4de1d108f8&UID=ylcdcd&ID=674124; Hm_lpvt_1dd872a37d41d9ebae4fd05f84c337c5=1438997129
 			$out = curl_exec($ch);
-			$res[] = array(
-					'title' => $item['Name'],
+			if($out === false)
+			{
+				$res[] = array(
+					'title' => 'Curl error: ' . curl_error($ch).'!!'.$item['Name'],
 					'status' => strpos($out, '对象已移动')!==false ? 0 : 1
 				);
+			}else{
+				$res[] = array(
+						'title' => $item['Name'],
+						'status' => strpos($out, '对象已移动')!==false ? 0 : 1
+					);
+			}
 			curl_close($ch);
+
+			file_put_contents($this->status_file, "upload:".$t."       total:".count($arr));
 		}
 
 		return $res;
